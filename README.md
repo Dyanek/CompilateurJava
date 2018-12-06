@@ -37,3 +37,138 @@ Les autres paramètres servent à garder le compte du nombre d'opérations utili
 * if
 * <
 * <=
+
+Le fichier sortie.asm est le fichier généré par le programme, il se trouvera avant la racine du dossier git : "../sortie.asm". Ce fichier peut être exécuté par un émulateur.
+
+## Exemples
+
+Si nous saisissons le code suivant :
+```
+let a = input;
+let b = input;
+while(0<b)
+do(let aux = (a mod b); let a = b; let b = aux);
+output a
+.
+```
+Le fichier de sortie sera :
+```
+DATA SEGMENT
+	a DD
+	b DD
+	aux DD
+DATA ENDS
+CODE SEGMENT
+	in eax
+	push eax
+	pop eax
+	mov a, eax
+	push eax
+	pop eax
+	in eax
+	push eax
+	pop eax
+	mov b, eax
+	push eax
+	pop eax
+debut_while_1:
+	mov eax, 0
+	push eax
+	mov eax, b
+	push eax
+	pop eax
+	pop ebx
+	sub eax, ebx
+	jle faux_gt_1
+	mov eax, 1
+	jmp sortie_gt_1
+faux_gt_1:
+	mov eax, 0
+sortie_gt_1:
+	jz sortie_while_1
+	mov eax, a
+	push eax
+	mov eax, b
+	push eax
+	pop ebx
+	pop eax
+	mov ecx, eax
+	div ecx, ebx
+	mul ecx, ebx
+	sub eax, ecx
+	push eax
+	pop eax
+	mov aux, eax
+	push eax
+	pop eax
+	mov eax, b
+	push eax
+	pop eax
+	mov a, eax
+	push eax
+	pop eax
+	mov eax, aux
+	push eax
+	pop eax
+	mov b, eax
+	push eax
+	jmp debut_while_1
+sortie_while_1:
+	pop eax
+	mov eax, a
+	push eax
+	out eax
+CODE ENDS
+```
+
+Pour le code suivant:
+```
+let a = 12;
+let b = 5;
+let c = a + b;
+output c
+```
+Le fichier suivant est créé:
+```
+DATA SEGMENT
+	a DD
+	b DD
+	c DD
+DATA ENDS
+CODE SEGMENT
+	mov eax, 12
+	push eax
+	pop eax
+	mov a, eax
+	push eax
+	pop eax
+	mov eax, 5
+	push eax
+	pop eax
+	mov b, eax
+	push eax
+	pop eax
+	mov eax, a
+	push eax
+	mov eax, b
+	push eax
+	pop ebx
+	pop eax
+	add eax, ebx
+	push eax
+	pop eax
+	mov c, eax
+	push eax
+	pop eax
+	mov eax, c
+	push eax
+	out eax
+CODE ENDS
+```
+
+Une partie du programme est donc fonctionnelle.
+
+Malheureusement, je n'ai pas complètement réussi à créer la partie si l'opérateur saisi est du type
+```
+IF condition THEN expression1 ELSE expression2
+```
